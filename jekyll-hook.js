@@ -4,12 +4,17 @@ var config  = require('./config.json');
 var fs      = require('fs');
 var express = require('express');
 var app     = express();
+var expressError = require('express-error');
 var queue   = require('queue-async');
 var tasks   = queue(1);
 var spawn   = require('child_process').spawn;
 var email   = require('emailjs/email');
 var mailer  = email.server.connect(config.email);
 var crypto  = require('crypto');
+
+app.configure(function() {
+  app.use(expressError.express3({contextLinesCount: 3, handleUncaughtException: true}));
+});
 
 app.use(express.bodyParser({
     verify: function(req,res,buffer){
@@ -35,6 +40,11 @@ app.use(express.bodyParser({
     }
 
 }));
+
+// Give monit a place to check for response
+app.get('/hooks', function (req, res) {
+  res.status(200).send({status: "ok"});
+});
 
 // Receive webhook post
 app.post('/hooks/jekyll/*', function(req, res) {
@@ -80,6 +90,8 @@ app.post('/hooks/jekyll/*', function(req, res) {
 
         /* source */ params.push(config.temp + '/' + data.owner + '/' + data.repo + '/' + data.branch + '/' + 'code');
         /* build  */ params.push(config.temp + '/' + data.owner + '/' + data.repo + '/' + data.branch + '/' + 'site');
+        /* bucket */ params.push(config.bucket);
+        /* ruby path */ params.push(config.rubypath);
 
         // Script by branch.
         var build_script = null;
@@ -94,7 +106,7 @@ app.post('/hooks/jekyll/*', function(req, res) {
             throw new Error('No default build script defined.');
           }
         }
-        
+
         var publish_script = null;
         try {
           publish_script = config.scripts[data.branch].publish;
@@ -141,7 +153,7 @@ app.post('/hooks/jekyll/*', function(req, res) {
 });
 
 // Start server
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 80;
 app.listen(port);
 console.log('Listening on port ' + port);
 

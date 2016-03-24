@@ -1,3 +1,6 @@
+Note: this README is inaccurate, as now this repo uses the aws sdk for publishing to s3,
+and there are a few more config options.
+
 # jekyll-hook
 
 A server that listens for webhook posts from GitHub, generates a website with

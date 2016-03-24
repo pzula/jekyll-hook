@@ -11,6 +11,8 @@ owner=$3
 giturl=$4
 source=$5
 build=$6
+bucket=$7
+rubypath=$8
 
 # Set the path of the hosted site
 site="/usr/share/nginx/html/$repo"

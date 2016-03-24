@@ -2,6 +2,8 @@
     "gh_server": "github.com",
     "temp": "/home/ubuntu/jekyll-hook",
     "public_repo": true,
+    "rubypath": '/opt/ruby-2.1.1/bin',
+    "bucket": "Your s3 bucket name",
     "scripts": {
       "#default": {
         "build": "./scripts/build.sh",

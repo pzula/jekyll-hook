@@ -11,6 +11,9 @@ owner=$3
 giturl=$4
 source=$5
 build=$6
+# S3 bucket
+bucket=$7
+rubypath=$8
 
 # Check to see if repo exists. If not, git clone it
 if [ ! -d $source ]; then
@@ -25,5 +28,6 @@ cd -
 
 # Run jekyll
 cd $source
-jekyll build -s $source -d $build
+$rubypath/jekyll build -s $source -d $build
 cd -
+
