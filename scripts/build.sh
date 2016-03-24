@@ -28,6 +28,6 @@ cd -
 
 # Run jekyll
 cd $source
-$rubypath/jekyll build -s $source -d $build
+$rubypath/jekyll build --source $source --destination $build
 cd -
 
